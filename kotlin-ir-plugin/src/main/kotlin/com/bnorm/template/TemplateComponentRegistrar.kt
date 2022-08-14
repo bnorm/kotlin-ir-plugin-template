@@ -47,5 +47,3 @@ class TemplateComponentRegistrar(
     IrGenerationExtension.registerExtension(project, TemplateIrGenerationExtension(messageCollector, string, file))
   }
 }
-
-

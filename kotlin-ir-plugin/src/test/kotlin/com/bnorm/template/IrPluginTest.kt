@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCompilerApi::class)
+
 /*
  * Copyright (C) 2020 Brian Norman
  *
@@ -16,10 +18,12 @@
 
 package com.bnorm.template
 
+import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
+import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import kotlin.test.assertEquals
-import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.Test
 
 class IrPluginTest {
@@ -42,19 +46,18 @@ fun debug() = "Hello, World!"
 
 fun compile(
   sourceFiles: List<SourceFile>,
-  plugin: ComponentRegistrar = TemplateComponentRegistrar(),
-): KotlinCompilation.Result {
+  plugin: CompilerPluginRegistrar = TemplateCompilerRegistrar(),
+): JvmCompilationResult {
   return KotlinCompilation().apply {
     sources = sourceFiles
-    useIR = true
-    compilerPlugins = listOf(plugin)
+    compilerPluginRegistrars = listOf(plugin)
     inheritClassPath = true
   }.compile()
 }
 
 fun compile(
   sourceFile: SourceFile,
-  plugin: ComponentRegistrar = TemplateComponentRegistrar(),
-): KotlinCompilation.Result {
+  plugin: CompilerPluginRegistrar = TemplateCompilerRegistrar(),
+): JvmCompilationResult {
   return compile(listOf(sourceFile), plugin)
 }
